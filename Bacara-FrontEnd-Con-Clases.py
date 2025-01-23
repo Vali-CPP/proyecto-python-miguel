@@ -1,0 +1,196 @@
+import pygame as pg
+import Funciones as func
+from time import sleep
+from random import randint
+
+class Boton:
+    def __init__(self, fuente, posicion_x, posicion_y, tamaño_x, tamaño_y, mensaje_texto, mensaje_color):
+        self.posicion_x = posicion_x
+        self.posicion_y = posicion_y
+        self.fuente = fuente
+        self.tamaño_x = tamaño_x
+        self.tamaño_y = tamaño_y
+        self.mensaje_texto = mensaje_texto
+        self.mensaje_color = mensaje_color
+
+    def Crear_superficie(self):
+        self.boton = pg.Rect(self.posicion_x, self.posicion_y, self.tamaño_x, self.tamaño_y)
+        self.mensaje = self.fuente.render(str(self.mensaje_texto), True, tuple(self.mensaje_color))
+    
+    def Dibujar_boton(self, ventana_de_aparicion, boton_color, boton):
+        pg.draw.rect(ventana_de_aparicion, boton_color, boton)
+    
+    def actualizar_mensaje(self, fuente, mensaje_actualizado, mensaje_actualizado_color = (255, 255, 255)):
+        self.mensaje_texto  = mensaje_actualizado
+        self.mensaje_color = mensaje_actualizado_color
+        self.mensaje = fuente.render(str(mensaje_actualizado), True, tuple(mensaje_actualizado_color))
+        return mensaje_actualizado
+
+pg.init()
+
+#Creando ventana
+ventana = pg.display.set_mode([1280, 720])
+pg.display.set_caption("Baccarat")
+
+#Variables varias
+fuente_pequeña = pg.font.Font(None, 35)
+fuente_grande = pg.font.Font(None, 75)
+juego_iniciado = False
+estado_de_boton_ingresar = False
+texto_ingresado = ""
+boton_ingrese_texto_contador = 0
+saldo_del_jugador = 1000
+saldo_del_jugador_texto = "Saldo: $" + str(saldo_del_jugador)
+saldo_del_jugador_texto_grande = "$" + str(saldo_del_jugador)
+saldo_apostado = 0
+saldo_apostado_texto = "Saldo Apostado: $" + str(saldo_apostado)
+game_loop = True
+tiempo_congelado_aleatorio = randint(1, 7)
+apuesta_eleccion_jugador = 0
+verificar_eleccion_jugador = False
+segunda_verificacion_eleccion_jugador = False
+verificar_congelamiento_barajeo = False
+apuesta_no_ingresada = 0
+apuesta_en_proceso = 1 
+apuesta_ingresada = 2
+
+#Colores para los cuadros y textos
+blanco = (255, 255, 255)
+rojo = (170, 0, 0)
+azul = (0, 0, 170)
+verde = (80, 135, 80)
+negro = (0, 0, 0)
+color_del_cuadro = verde
+
+#Carga de imagenes.
+mesa = pg.image.load("Recursos/Mesa.jpg").convert()
+baraja_carta_reverso_crudo = pg.image.load("Recursos/reverso_baraja_1.jpg").convert()
+baraja_carta_reverso_ajustada = pg.transform.scale(baraja_carta_reverso_crudo, (100, 150))
+menu = pg.image.load("Recursos/Menu.jpg").convert()
+
+#Instanciando de botones
+boton_comenzar = Boton(fuente_pequeña , 503, 508, 150, 50, "Comenzar", blanco)
+boton_salir = Boton(fuente_pequeña , 503, 567, 150, 50, "Salir", blanco)
+boton_regresar = Boton(fuente_pequeña , 1115, 3, 150, 50, "Regresar", blanco)
+boton_ingrese_texto_inactivo = Boton(fuente_pequeña , 470, 390, 350, 70, "Escriba", negro)
+boton_ingrese_texto_activo = Boton(fuente_pequeña , 470, 390, 350, 70, "", blanco)
+boton_apuesta_jugador = Boton(fuente_pequeña, 406, 463, 239, 232, "Click", blanco)
+boton_apuesta_banca = Boton(fuente_pequeña, 645, 463, 237, 232, "Click", blanco)
+
+
+#Esto no es un boton, solamente se utiliza para mostrar el saldo actual y se usa la clase boton por conveniencia
+texto_saldo_actual_esquina = Boton(fuente_pequeña, 40, 5, 150, 50, str(saldo_del_jugador_texto), blanco)
+texto_saldo_actual_grande = Boton(fuente_grande, 560, 585, 150, 50, str(saldo_del_jugador_texto_grande), blanco)
+texto_saldo_apostado_esquina = Boton(fuente_pequeña, 260, 5, 150, 50, str(saldo_apostado_texto), blanco)
+
+#Creando los botones necesarios
+boton_comenzar.Crear_superficie()
+boton_salir.Crear_superficie()
+boton_regresar.Crear_superficie()
+boton_apuesta_jugador.Crear_superficie()
+boton_apuesta_banca.Crear_superficie()
+boton_ingrese_texto_inactivo.Crear_superficie()
+texto_saldo_actual_esquina.Crear_superficie()
+texto_saldo_apostado_esquina.Crear_superficie()
+
+#Game Loop
+while game_loop:
+
+    if not juego_iniciado:
+        func.pantalla_menu(ventana, menu, boton_comenzar, boton_salir)
+
+    if juego_iniciado:
+        if  boton_ingrese_texto_contador == apuesta_no_ingresada:
+            func.pantalla_para_ingresar_apuesta(ventana, mesa, texto_saldo_actual_grande, baraja_carta_reverso_ajustada, boton_regresar, boton_ingrese_texto_inactivo, boton_ingrese_texto_activo, texto_ingresado_renderizado, desplazamiento_lateral_del_texto, fuente_pequeña )
+
+        elif boton_ingrese_texto_contador == apuesta_en_proceso:
+            func.pantalla_para_ingresar_apuesta(ventana, mesa, texto_saldo_actual_grande, baraja_carta_reverso_ajustada, boton_regresar, boton_ingrese_texto_inactivo, boton_ingrese_texto_activo, texto_ingresado_renderizado, desplazamiento_lateral_del_texto, fuente_pequeña , 1)
+
+        if boton_ingrese_texto_contador == apuesta_ingresada:
+            if not verificar_congelamiento_barajeo:
+                func.pantalla_para_barajeo(ventana, mesa, texto_saldo_actual_esquina, texto_saldo_apostado_esquina, baraja_carta_reverso_ajustada, boton_regresar)
+
+                pg.display.flip()
+
+                verificar_congelamiento_barajeo = func.congelamiento_barajeo(tiempo_congelado_aleatorio)
+
+            if verificar_congelamiento_barajeo:
+                if not verificar_eleccion_jugador:
+                    pg.display.flip()
+                    func.pantalla_para_elegir_apuesta(ventana, mesa, texto_saldo_actual_esquina, texto_saldo_apostado_esquina, baraja_carta_reverso_ajustada, boton_apuesta_jugador, boton_apuesta_banca, boton_regresar)
+                elif verificar_eleccion_jugador:
+                    #Aqui va la siguiente pantalla
+                    pass
+
+    #Inicio del bucle para capturar eventos, todos los eventos de la pantalla son gestionados dentro de este bucle
+    for event in pg.event.get():
+        if event.type == pg.QUIT:
+            game_loop = False
+
+        #Gestionando la accion de diferentes botones.
+        if event.type == pg.MOUSEBUTTONDOWN and event.button == 1:
+
+            if boton_comenzar.boton.collidepoint(pg.mouse.get_pos()):
+                juego_iniciado = True
+
+            elif boton_salir.boton.collidepoint(pg.mouse.get_pos()) and not juego_iniciado:
+                game_loop = False
+                boton_ingrese_texto_contador = 0
+
+            elif boton_regresar.boton.collidepoint(pg.mouse.get_pos()):
+                juego_iniciado = False
+                boton_ingrese_texto_contador = 0
+                saldo_apostado = 0
+                saldo_del_jugador = 1000
+                texto_ingresado = ""
+                verificar_congelamiento_barajeo = False
+                apuesta_eleccion_jugador = 0
+                verificar_eleccion_jugador = False
+                segunda_verificacion_eleccion_jugador = False
+            
+            #Gestionando la logica de los botones de apuesta.
+            if verificar_congelamiento_barajeo:
+                if not verificar_eleccion_jugador:
+                    if boton_apuesta_banca.boton.collidepoint(pg.mouse.get_pos()):
+                        apuesta_eleccion_jugador = 2
+                        verificar_eleccion_jugador = True
+
+                    elif boton_apuesta_jugador.boton.collidepoint(pg.mouse.get_pos()):
+                        apuesta_eleccion_jugador = 1
+                        verificar_eleccion_jugador = True
+
+            #Gestionando la accion del boton Escriba
+            if boton_ingrese_texto_inactivo.boton.collidepoint(pg.mouse.get_pos()) and juego_iniciado:  
+                boton_ingrese_texto_contador += 1
+
+        #Este bloque de codigo se encarga de manejar la logica del ingresado de texto durante la primera pantalla:
+        if event.type == pg.KEYDOWN and boton_ingrese_texto_contador == apuesta_en_proceso:
+            if event.key == pg.K_BACKSPACE:
+                texto_ingresado = texto_ingresado[:-1]
+            elif (event.key == pg.K_RETURN or boton_ingrese_texto_contador == apuesta_ingresada) and int(texto_ingresado) < saldo_del_jugador:
+                saldo_del_jugador -= int(texto_ingresado)
+                saldo_apostado += int(texto_ingresado)
+                saldo_del_jugador_texto = "Saldo: $" + str(saldo_del_jugador)
+                saldo_apostado_texto = "Saldo Apostado: $" + str(saldo_apostado)
+                texto_saldo_actual_esquina.actualizar_mensaje(fuente_pequeña, saldo_del_jugador_texto)
+                texto_saldo_apostado_esquina.actualizar_mensaje(fuente_pequeña, saldo_apostado_texto)
+                boton_ingrese_texto_contador += 1
+            else:
+                texto_ingresado += event.unicode
+
+    desplazamiento_lateral_del_texto = 0
+    texto_ingresado_renderizado = fuente_pequeña.render(texto_ingresado, True, negro)
+    ancho_del_texto = texto_ingresado_renderizado.get_width()
+    
+    # Desplazamiento si el texto excede el ancho del cuadro
+    if ancho_del_texto > boton_ingrese_texto_inactivo.boton.w - 10:
+        desplazamiento_lateral_del_texto = ancho_del_texto - (boton_ingrese_texto_inactivo.boton.w - 10)
+    else:
+        desplazamiento_lateral_del_texto = 0
+
+    #mouse_pos = pg.mouse.get_pos()
+    #print(mouse_pos)
+
+    pg.display.flip()
+
+pg.quit()
