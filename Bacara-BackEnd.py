@@ -44,16 +44,6 @@ class Baraja:
             j = random.randrange(i, nCartas)
             self.baraja[i], self.baraja[j] = self.baraja[j], self.baraja[i]
 
-    def mostrar_baraja(self):
-        print()
-        for num, carta in enumerate(self.baraja):
-            if (num + 1) % 4 != 0:
-                print(carta, end=" ")
-            else:
-                print(carta)
-                print()
-        print()
-
 def calcular_mano(mano):
     valor = sum(carta.valor_numerico for carta in mano)
     return valor % 10

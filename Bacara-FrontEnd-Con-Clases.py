@@ -90,8 +90,10 @@ boton_regresar.Crear_superficie()
 boton_apuesta_jugador.Crear_superficie()
 boton_apuesta_banca.Crear_superficie()
 boton_ingrese_texto_inactivo.Crear_superficie()
+boton_ingrese_texto_activo.Crear_superficie()
 texto_saldo_actual_esquina.Crear_superficie()
 texto_saldo_apostado_esquina.Crear_superficie()
+texto_saldo_actual_grande.Crear_superficie()
 
 #Game Loop
 while game_loop:
@@ -120,7 +122,7 @@ while game_loop:
                     func.pantalla_para_elegir_apuesta(ventana, mesa, texto_saldo_actual_esquina, texto_saldo_apostado_esquina, baraja_carta_reverso_ajustada, boton_apuesta_jugador, boton_apuesta_banca, boton_regresar)
                 elif verificar_eleccion_jugador:
                     #Aqui va la siguiente pantalla
-                    func.pantalla_para_mostrar_cartas(ventana, mesa, texto_saldo_actual_esquina, texto_saldo_apostado_esquina, baraja_carta_reverso_ajustada, boton_regresar, )
+                    func.pantalla_para_mostrar_cartas(ventana, mesa, texto_saldo_actual_esquina, texto_saldo_apostado_esquina, baraja_carta_reverso_ajustada, boton_regresar)
 
     #Inicio del bucle para capturar eventos, todos los eventos de la pantalla son gestionados dentro de este bucle
     for event in pg.event.get():
