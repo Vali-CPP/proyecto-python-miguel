@@ -36,6 +36,7 @@ class Baraja:
             for letra, contenido in elemento:
                 for valor, imagen in contenido:
                     carta = Carta(letra, imagen, valor)
+                    self.baraja.append(carta)
 
     def barajar(self):
         nCartas = len(self.baraja)

@@ -96,8 +96,14 @@ def pantalla_para_elegir_apuesta(ventana, imagen_mesa, texto_saldo_actual_esquin
     renderizar_texto_jugador_mesa(ventana, fuente_grande, 155, 465, 975, 465)
     
 
-#def pantalla_para_mostrar_cartas(ventana, imagen_mesa, texto_saldo_actual_esquina, texto_saldo_apostado_esquina, baraja_carta_reverso_ajustada, boton_regresar):
-
+def pantalla_para_mostrar_cartas(ventana, imagen_mesa, texto_saldo_actual_esquina, texto_saldo_apostado_esquina, baraja_carta_reverso_ajustada, boton_regresar):
+    ventana.blit(imagen_mesa, [0, 0])
+    mazo_de_barajeo(ventana, baraja_carta_reverso_ajustada)
+    boton_regresar.Crear_superficie()
+    texto_saldo_apostado_esquina.Crear_superficie()
+    texto_saldo_actual_esquina.Crear_superficie()
+    blit_sequence =  [(boton_regresar.mensaje, (boton_regresar.boton.x+(boton_regresar.boton.width - boton_regresar.mensaje.get_width())/2, boton_regresar.boton.y+(boton_regresar.boton.height - boton_regresar.mensaje.get_height())/2)), (texto_saldo_actual_esquina.mensaje, (texto_saldo_actual_esquina.boton.x+(texto_saldo_actual_esquina.boton.width - texto_saldo_actual_esquina.mensaje.get_width())/2, texto_saldo_actual_esquina.boton.y+(texto_saldo_actual_esquina.boton.height - texto_saldo_actual_esquina.mensaje.get_height())/2)), (texto_saldo_apostado_esquina.mensaje, (texto_saldo_apostado_esquina.boton.x+(texto_saldo_apostado_esquina.boton.width - texto_saldo_apostado_esquina.mensaje.get_width())/2, texto_saldo_apostado_esquina.boton.y+(texto_saldo_apostado_esquina.boton.height - texto_saldo_apostado_esquina.mensaje.get_height())/2))]
+    ventana.blits(blit_sequence)
 
 
 def congelamiento_barajeo(tiempo_de_congelamiento):
