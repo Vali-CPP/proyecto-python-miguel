@@ -3,14 +3,6 @@ import pygame as pg
 
 pg.init()
 # Clase Carta con sus atributos
-class Carta:
-    def __init__(self, valor, imagen_carta, valor_numerico):
-        self.valor = valor
-        self.imagen_carta = imagen_carta
-        self.valor_numerico = valor_numerico
-
-    def __str__(self):
-        return "[{}-{}-{}]".format(self.valor, self.imagen_carta, self.valor_numerico)
 
 imagen_carta_as = pg.image.load("Recuros/Acrz").convert()
 imagen_carta_2 = pg.image.load("Recuros/2crz").convert()

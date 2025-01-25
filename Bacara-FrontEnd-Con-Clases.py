@@ -3,6 +3,7 @@ import Funciones as func
 from time import sleep
 from random import randint
 
+pg.init()
 class Boton:
     def __init__(self, fuente, posicion_x, posicion_y, tamaño_x, tamaño_y, mensaje_texto, mensaje_color):
         self.posicion_x = posicion_x
@@ -26,11 +27,49 @@ class Boton:
         self.mensaje = fuente.render(str(mensaje_actualizado), True, tuple(mensaje_actualizado_color))
         return mensaje_actualizado
 
-pg.init()
+class Carta:
+    def __init__(self, caracter, valor_numerico, imagen_carta):
+        self.caracter = caracter 
+        self.imagen_carta = imagen_carta
+        self.valor_numerico = valor_numerico
+
+class Baraja:
+    def __init__(self):
+        self.Baraja = []
+
+    def Agregar_carta(self, Carta):
+        self.Baraja.append(Carta)
+
+    def Obtener_carta_random(self):
+        carta_random = self.Baraja[randint(0,11)]
+        return carta_random
+    
+    def Obtener_baraja(self):
+        return self.Baraja
 
 #Creando ventana
 ventana = pg.display.set_mode([1280, 720])
 pg.display.set_caption("Baccarat")
+
+#Carga de imagenes.
+mesa = pg.image.load("Recursos/Mesa.jpg").convert()
+baraja_carta_reverso_crudo = pg.image.load("Recursos/reverso_baraja_1.jpg").convert()
+baraja_carta_reverso_ajustada = pg.transform.scale(baraja_carta_reverso_crudo, (100, 150))
+menu = pg.image.load("Recursos/Menu.jpg").convert()
+imagen_carta_as = pg.image.load("Recursos/Cartas_a_utilizar/Acrz.PNG").convert()
+imangen_carta_as = pg.transform.scale(imagen_carta_as, (100, 150))
+imagen_carta_2 = pg.image.load("Recursos/Cartas_a_utilizar/2crz.PNG").convert()
+imagen_carta_3 = pg.image.load("Recursos/Cartas_a_utilizar/3crz.PNG").convert()
+imagen_carta_4 = pg.image.load("Recursos/Cartas_a_utilizar/4crz.PNG").convert()
+imagen_carta_5 = pg.image.load("Recursos/Cartas_a_utilizar/5dmt.PNG").convert()
+imagen_carta_6 = pg.image.load("Recursos/Cartas_a_utilizar/6dmt.PNG").convert()
+imagen_carta_7 = pg.image.load("Recursos/Cartas_a_utilizar/7dmt.PNG").convert()
+imagen_carta_8 = pg.image.load("Recursos/Cartas_a_utilizar/8pcz.PNG").convert()
+imagen_carta_9 = pg.image.load("Recursos/Cartas_a_utilizar/9pcz.PNG").convert()
+imagen_carta_10 = pg.image.load("Recursos/Cartas_a_utilizar/10pcz.PNG").convert()
+imagen_carta_J = pg.image.load("Recursos/Cartas_a_utilizar/Jtrb.PNG").convert()
+imagen_carta_Q = pg.image.load("Recursos/Cartas_a_utilizar/Qtrb.PNG").convert()
+imagen_carta_K = pg.image.load("Recursos/Cartas_a_utilizar/Ktrb.PNG").convert()
 
 #Variables varias
 fuente_pequeña = pg.font.Font(None, 35)
@@ -53,6 +92,21 @@ verificar_congelamiento_barajeo = False
 apuesta_no_ingresada = 0
 apuesta_en_proceso = 1 
 apuesta_ingresada = 2
+carta_contenido = [["A", 1, imagen_carta_as], ["2", 2, imagen_carta_2], ["3", 3, imagen_carta_3], ["4", 4, imagen_carta_4], ["5", 5, imagen_carta_5], ["6", 6, imagen_carta_6], ["7", 7, imagen_carta_8], ["8", 8, imagen_carta_8], ["9", 9, imagen_carta_9], ["10", 0, imagen_carta_10], ["J", 0, imagen_carta_J], ["Q", 0, imagen_carta_Q], ["K", 0, imagen_carta_K]]
+
+#Creando las cartas, la baraja y las manos de cada jugador
+baraja = Baraja()
+for lista in carta_contenido:
+    carta = Carta(lista[0], lista[1], lista[2])
+    baraja.Agregar_carta(carta)
+
+mano_jugador = list() 
+mano_banca = list()
+
+for i in range(1, 4):
+    mano_jugador.append(baraja.Obtener_carta_random())
+    mano_banca.append(baraja.Obtener_carta_random())
+
 
 #Colores para los cuadros y textos
 blanco = (255, 255, 255)
@@ -61,12 +115,6 @@ azul = (0, 0, 170)
 verde = (80, 135, 80)
 negro = (0, 0, 0)
 color_del_cuadro = verde
-
-#Carga de imagenes.
-mesa = pg.image.load("Recursos/Mesa.jpg").convert()
-baraja_carta_reverso_crudo = pg.image.load("Recursos/reverso_baraja_1.jpg").convert()
-baraja_carta_reverso_ajustada = pg.transform.scale(baraja_carta_reverso_crudo, (100, 150))
-menu = pg.image.load("Recursos/Menu.jpg").convert()
 
 #Instanciando de botones
 boton_comenzar = Boton(fuente_pequeña , 503, 508, 150, 50, "Comenzar", blanco)
@@ -83,7 +131,7 @@ texto_saldo_actual_esquina = Boton(fuente_pequeña, 40, 5, 150, 50, str(saldo_de
 texto_saldo_actual_grande = Boton(fuente_grande, 560, 585, 150, 50, str(saldo_del_jugador_texto_grande), blanco)
 texto_saldo_apostado_esquina = Boton(fuente_pequeña, 260, 5, 150, 50, str(saldo_apostado_texto), blanco)
 
-#Creando los botones necesarios
+#Creando la superficie sin dibujar de los botones
 boton_comenzar.Crear_superficie()
 boton_salir.Crear_superficie()
 boton_regresar.Crear_superficie()
@@ -94,6 +142,8 @@ boton_ingrese_texto_activo.Crear_superficie()
 texto_saldo_actual_esquina.Crear_superficie()
 texto_saldo_apostado_esquina.Crear_superficie()
 texto_saldo_actual_grande.Crear_superficie()
+
+
 
 #Game Loop
 while game_loop:
