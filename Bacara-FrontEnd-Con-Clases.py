@@ -30,7 +30,7 @@ class Boton:
 class Carta:
     def __init__(self, caracter, valor_numerico, imagen_carta):
         self.caracter = caracter 
-        self.imagen_carta = imagen_carta
+        self.imagen = imagen_carta
         self.valor_numerico = valor_numerico
 
 class Baraja:
@@ -46,6 +46,26 @@ class Baraja:
     
     def Obtener_baraja(self):
         return self.Baraja
+
+class Mano:
+    def __init__(self):
+        self.cartas = list()
+
+    def Agregar_carta(self, carta):
+        self.cartas.append(carta)
+
+    def calcular_puntuacion(self):
+        self.puntuacion = int()
+        for i in self.cartas:
+            self.puntuacion += i.valor_numerico
+        
+        if self.puntuacion > 9:
+            return 0
+        
+        return self.puntuacion
+
+    def obtener_imagenes(self):
+        return [self.cartas[0].imagen, self.cartas[1].imagen, self.cartas[2].imagen]
 
 #Creando ventana
 ventana = pg.display.set_mode([1280, 720])
@@ -100,13 +120,12 @@ for lista in carta_contenido:
     carta = Carta(lista[0], lista[1], lista[2])
     baraja.Agregar_carta(carta)
 
-mano_jugador = list() 
-mano_banca = list()
+mano_jugador = Mano() 
+mano_banca = Mano()
 
 for i in range(1, 4):
-    mano_jugador.append(baraja.Obtener_carta_random())
-    mano_banca.append(baraja.Obtener_carta_random())
-
+    mano_jugador.Agregar_carta(baraja.Obtener_carta_random())
+    mano_banca.Agregar_carta(baraja.Obtener_carta_random())
 
 #Colores para los cuadros y textos
 blanco = (255, 255, 255)
@@ -142,8 +161,6 @@ boton_ingrese_texto_activo.Crear_superficie()
 texto_saldo_actual_esquina.Crear_superficie()
 texto_saldo_apostado_esquina.Crear_superficie()
 texto_saldo_actual_grande.Crear_superficie()
-
-
 
 #Game Loop
 while game_loop:
