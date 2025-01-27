@@ -38,10 +38,10 @@ class Baraja:
     def __init__(self):
         self.Baraja = []
 
-    def Agregar_carta(self, Carta):
+    def agregar_carta(self, Carta):
         self.Baraja.append(Carta)
 
-    def Obtener_carta_random(self):
+    def obtener_carta_random(self):
         carta_random = self.Baraja[randint(0,11)]
         return carta_random
 
@@ -49,7 +49,7 @@ class Mano:
     def __init__(self):
         self.cartas = list()
 
-    def Agregar_carta(self, carta):
+    def agregar_carta(self, carta):
         self.cartas.append(carta)
 
     def obtener_puntuacion(self):
@@ -67,6 +67,10 @@ class Mano:
     
     def obtener_valores(self):
         return [self.cartas[0].caracter, self.cartas[1].caracter, self.cartas[2].caracter]
+
+    def limpiar_mano(self):
+        self.cartas = list()
+
 
 #Creando ventana
 ventana = pg.display.set_mode([1280, 720])
@@ -125,24 +129,26 @@ verificar_congelamiento_barajeo = False
 apuesta_no_ingresada = 0
 apuesta_en_proceso = 1 
 apuesta_ingresada = 2
+apuesta_invalida = 4
 carta_contenido = [["A", 1, imagen_carta_as], ["2", 2, imagen_carta_2], ["3", 3, imagen_carta_3], ["4", 4, imagen_carta_4], ["5", 5, imagen_carta_5], ["6", 6, imagen_carta_6], ["7", 7, imagen_carta_8], ["8", 8, imagen_carta_8], ["9", 9, imagen_carta_9], ["10", 0, imagen_carta_10], ["J", 0, imagen_carta_J], ["Q", 0, imagen_carta_Q], ["K", 0, imagen_carta_K]]
+mano_jugador = Mano() 
+mano_banca = Mano()
+manos = [mano_jugador, mano_banca]
 
 
 #Creando las cartas, la baraja y las manos de cada jugador
 baraja = Baraja()
 for lista in carta_contenido:
     carta = Carta(lista[0], lista[1], lista[2])
-    baraja.Agregar_carta(carta)
-
-mano_jugador = Mano() 
-mano_banca = Mano()
+    baraja.agregar_carta(carta)
 
 for i in range(1, 4):
-    mano_jugador.Agregar_carta(baraja.Obtener_carta_random())
-    mano_banca.Agregar_carta(baraja.Obtener_carta_random())
+    mano_jugador.agregar_carta(baraja.obtener_carta_random())
+    mano_banca.agregar_carta(baraja.obtener_carta_random())
 
 puntos_jugador = str(mano_jugador.obtener_puntuacion())
 puntos_banca = str(mano_banca.obtener_puntuacion())
+
 
 #Colores para los cuadros y textos
 blanco = (255, 255, 255)
@@ -179,6 +185,9 @@ texto_saldo_actual_esquina.Crear_superficie()
 texto_saldo_apostado_esquina.Crear_superficie()
 texto_saldo_actual_grande.Crear_superficie()
 
+
+#Pre-Game loop
+
 #Game Loop
 while game_loop:
 
@@ -191,6 +200,10 @@ while game_loop:
 
         elif boton_ingrese_texto_contador == apuesta_en_proceso:
             func.pantalla_para_ingresar_apuesta(ventana, mesa, texto_saldo_actual_grande, baraja_carta_reverso_ajustada, boton_regresar, boton_ingrese_texto_inactivo, boton_ingrese_texto_activo, texto_ingresado_renderizado, desplazamiento_lateral_del_texto, fuente_pequeña , 1)
+
+        if boton_ingrese_texto_contador == apuesta_invalida:
+            #Aqui va la pantalla de apuesta invalida.
+            print("Tas pelando bolas")
 
         if boton_ingrese_texto_contador == apuesta_ingresada:
             if not verificar_congelamiento_barajeo:
@@ -206,22 +219,53 @@ while game_loop:
                     pg.display.flip()
                     func.pantalla_para_elegir_apuesta(ventana, mesa, texto_saldo_actual_esquina, texto_saldo_apostado_esquina, baraja_carta_reverso_ajustada, boton_apuesta_jugador, boton_apuesta_banca, boton_regresar)
 
-                func.pantalla_para_mostrar_cartas(ventana, mesa, texto_saldo_actual_esquina, texto_saldo_apostado_esquina, baraja_carta_reverso_ajustada, boton_regresar, mano_jugador.obtener_imagenes(), mano_banca.obtener_imagenes(), puntos_jugador, puntos_banca)
-
-                pg.display.flip()
-
-                func.congelamiento_barajeo(tiempo_congelado_aleatorio)
-
-                if mano_jugador.obtener_puntuacion() > mano_banca.obtener_puntuacion():
-                    if apuesta_eleccion_jugador == 1:
-                        func.pantalla_para_victoria(ventana, mesa)
-                    func.pantalla_para_mostrar_derrota(ventana, mesa)
-
                 else:
-                    if apuesta_eleccion_jugador == 2:
+                    func.pantalla_para_mostrar_cartas(ventana, mesa, texto_saldo_actual_esquina, texto_saldo_apostado_esquina, baraja_carta_reverso_ajustada, boton_regresar, mano_jugador.obtener_imagenes(), mano_banca.obtener_imagenes(), mano_jugador.obtener_puntuacion(), mano_banca.obtener_puntuacion())
+    
+                    pg.display.flip()
+    
+                    sleep(3)
+                    
+                    if (mano_jugador.obtener_puntuacion() > mano_banca.obtener_puntuacion() and apuesta_eleccion_jugador == 1) or (mano_jugador.obtener_puntuacion() < mano_banca.obtener_puntuacion() and apuesta_eleccion_jugador == 2): 
+                        pg.display.flip()
                         func.pantalla_para_victoria(ventana, mesa)
-                    func.pantalla_para_mostrar_derrota(ventana, mesa)
-
+                        pg.display.flip()
+                        sleep(5)
+                        boton_ingrese_texto_contador = 0
+                        saldo_del_jugador += round((saldo_apostado * 1.5), 0)
+                        texto_saldo_actual_grande.actualizar_mensaje(fuente_grande, "$" + str(saldo_del_jugador))
+                        saldo_apostado = 0
+                        texto_ingresado = ""
+                        verificar_congelamiento_barajeo = False
+                        apuesta_eleccion_jugador = 0
+                        verificar_eleccion_jugador = False
+                        func.limpiar_y_barajear_mano(manos, baraja)
+                    elif (mano_jugador.obtener_puntuacion() > mano_banca.obtener_puntuacion() and apuesta_eleccion_jugador == 2) or (mano_jugador.obtener_puntuacion() < mano_banca.obtener_puntuacion() and apuesta_eleccion_jugador == 1):
+                        pg.display.flip()
+                        func.pantalla_para_mostrar_derrota(ventana, mesa)
+                        pg.display.flip()
+                        sleep(3)
+                        boton_ingrese_texto_contador = 0
+                        saldo_apostado = 0
+                        texto_ingresado = ""
+                        verificar_congelamiento_barajeo = False
+                        apuesta_eleccion_jugador = 0
+                        verificar_eleccion_jugador = False
+                        func.limpiar_y_barajear_mano(manos, baraja)
+                    elif mano_jugador.obtener_puntuacion() == mano_banca.obtener_puntuacion():
+                        pg.display.flip()
+                        func.pantalla_para_mostrar_empate(ventana, mesa)
+                        pg.display.flip()
+                        sleep(4)
+                        boton_ingrese_texto_contador = 0
+                        saldo_del_jugador += saldo_apostado 
+                        texto_saldo_actual_grande.actualizar_mensaje(fuente_grande, "$" + str(saldo_del_jugador))
+                        saldo_apostado = 0
+                        texto_ingresado = ""
+                        verificar_congelamiento_barajeo = False
+                        apuesta_eleccion_jugador = 0
+                        verificar_eleccion_jugador = False
+                        func.limpiar_y_barajear_mano(manos, baraja)
 
 
     #Inicio del bucle para capturar eventos, todos los eventos de la pantalla son gestionados dentro de este bucle
@@ -248,7 +292,7 @@ while game_loop:
                 verificar_congelamiento_barajeo = False
                 apuesta_eleccion_jugador = 0
                 verificar_eleccion_jugador = False
-                segunda_verificacion_eleccion_jugador = False
+                texto_saldo_actual_grande.actualizar_mensaje(fuente_grande, "$1000")
             
             #Gestionando la logica de los botones de apuesta.
             if verificar_congelamiento_barajeo:
@@ -263,19 +307,23 @@ while game_loop:
 
             #Gestionando la accion del boton Escriba
             if boton_ingrese_texto_inactivo.boton.collidepoint(pg.mouse.get_pos()) and juego_iniciado:  
-                boton_ingrese_texto_contador += 1
+                boton_ingrese_texto_contador += apuesta_en_proceso
 
         #Este bloque de codigo se encarga de manejar la logica del ingresado de texto durante la primera pantalla:
         if event.type == pg.KEYDOWN and boton_ingrese_texto_contador == apuesta_en_proceso:
             if event.key == pg.K_BACKSPACE:
                 texto_ingresado = texto_ingresado[:-1]
-            elif (event.key == pg.K_RETURN or boton_ingrese_texto_contador == apuesta_ingresada) and int(texto_ingresado) < saldo_del_jugador:
+            elif (event.key == pg.K_RETURN or boton_ingrese_texto_contador == apuesta_ingresada):
+                if int(texto_ingresado) < saldo_del_jugador and int(texto_ingresado) <= 0:
+                    boton_ingrese_texto_contador = apuesta_invalida
                 saldo_del_jugador -= int(texto_ingresado)
                 saldo_apostado += int(texto_ingresado)
                 saldo_del_jugador_texto = "Saldo: $" + str(saldo_del_jugador)
+                saldo_del_jugador_texto_grande = "$" + str(saldo_del_jugador)
                 saldo_apostado_texto = "Saldo Apostado: $" + str(saldo_apostado)
                 texto_saldo_actual_esquina.actualizar_mensaje(fuente_pequeña, saldo_del_jugador_texto)
                 texto_saldo_apostado_esquina.actualizar_mensaje(fuente_pequeña, saldo_apostado_texto)
+                texto_saldo_actual_grande.actualizar_mensaje(fuente_grande, saldo_del_jugador_texto_grande)
                 boton_ingrese_texto_contador += 1
             else:
                 texto_ingresado += event.unicode

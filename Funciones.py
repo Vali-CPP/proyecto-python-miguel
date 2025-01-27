@@ -42,6 +42,14 @@ def renderizar_texto_empate_mesa(ventana, fuente, texto_empate_pos_x=490, texto_
     texto_empate = fuente.render("¡Empate!", 50, blanco)
     ventana.blit(texto_empate,(texto_empate_pos_x, texto_empate_pos_y))
 
+def limpiar_y_barajear_mano(manos, baraja):
+    for mano in manos:
+        mano.limpiar_mano()
+    
+    for mano in manos:
+        for i in range(0, 3):
+            mano.agregar_carta(baraja.obtener_carta_random())
+
 #Pantallas
 
 def  pantalla_menu(ventana, imagen_menu, boton_comenzar, boton_salir):
@@ -112,8 +120,8 @@ def pantalla_para_mostrar_cartas(ventana, imagen_mesa, texto_saldo_actual_esquin
     ventana.blits(bs_imagenes_carta_volteadas)
     texto_puntuacion_jugador = fuente_mediana.render("Puntuacion: ", 50, blanco)
     texto_puntuacion_banca = fuente_mediana.render("Puntuacion: ", 50, blanco)
-    texto_numeros_ptos_jugador = fuente_mediana.render(puntaje_jugador, 50, blanco)
-    texto_numeros_ptos_banca = fuente_mediana.render(puntaje_banca, 50, blanco)
+    texto_numeros_ptos_jugador = fuente_mediana.render(str(puntaje_jugador), 50, blanco)
+    texto_numeros_ptos_banca = fuente_mediana.render(str(puntaje_banca), 50, blanco)
     textos_y_numeros_puntuacion = [(texto_puntuacion_jugador,(280, 390)), (texto_puntuacion_banca, (830, 390)), (texto_numeros_ptos_jugador, (360, 445)), (texto_numeros_ptos_banca, (910, 445))]
     ventana.blits(textos_y_numeros_puntuacion)
     renderizar_texto_jugador_mesa(ventana, fuente_grande, 280, 330, 850, 330)
