@@ -43,9 +43,6 @@ class Baraja:
     def Obtener_carta_random(self):
         carta_random = self.Baraja[randint(0,11)]
         return carta_random
-    
-    def Obtener_baraja(self):
-        return self.Baraja
 
 class Mano:
     def __init__(self):
@@ -59,13 +56,16 @@ class Mano:
         for i in self.cartas:
             self.puntuacion += i.valor_numerico
         
-        if self.puntuacion > 9:
+        if self.puntuacion >= 9:
             return 0
         
         return self.puntuacion
 
     def obtener_imagenes(self):
         return [self.cartas[0].imagen, self.cartas[1].imagen, self.cartas[2].imagen]
+    
+    def obtener_valores(self):
+        return [self.cartas[0].caracter, self.cartas[1].caracter, self.cartas[2].caracter]
 
 #Creando ventana
 ventana = pg.display.set_mode([1280, 720])
@@ -103,7 +103,6 @@ imagen_carta_J = pg.transform.scale(imagen_carta_J, (100, 150))
 imagen_carta_Q = pg.transform.scale(imagen_carta_Q, (100, 150))
 imagen_carta_K = pg.transform.scale(imagen_carta_K, (100, 150))
 
-
 #Variables varias
 fuente_pequeña = pg.font.Font(None, 35)
 fuente_grande = pg.font.Font(None, 75)
@@ -127,6 +126,7 @@ apuesta_en_proceso = 1
 apuesta_ingresada = 2
 carta_contenido = [["A", 1, imagen_carta_as], ["2", 2, imagen_carta_2], ["3", 3, imagen_carta_3], ["4", 4, imagen_carta_4], ["5", 5, imagen_carta_5], ["6", 6, imagen_carta_6], ["7", 7, imagen_carta_8], ["8", 8, imagen_carta_8], ["9", 9, imagen_carta_9], ["10", 0, imagen_carta_10], ["J", 0, imagen_carta_J], ["Q", 0, imagen_carta_Q], ["K", 0, imagen_carta_K]]
 
+
 #Creando las cartas, la baraja y las manos de cada jugador
 baraja = Baraja()
 for lista in carta_contenido:
@@ -139,6 +139,9 @@ mano_banca = Mano()
 for i in range(1, 4):
     mano_jugador.Agregar_carta(baraja.Obtener_carta_random())
     mano_banca.Agregar_carta(baraja.Obtener_carta_random())
+
+puntos_jugador = str(mano_jugador.obtener_puntuacion())
+puntos_banca = str(mano_banca.obtener_puntuacion())
 
 #Colores para los cuadros y textos
 blanco = (255, 255, 255)
@@ -201,7 +204,7 @@ while game_loop:
                     pg.display.flip()
                     func.pantalla_para_elegir_apuesta(ventana, mesa, texto_saldo_actual_esquina, texto_saldo_apostado_esquina, baraja_carta_reverso_ajustada, boton_apuesta_jugador, boton_apuesta_banca, boton_regresar)
                 elif verificar_eleccion_jugador:
-                    func.pantalla_para_mostrar_cartas(ventana, mesa, texto_saldo_actual_esquina, texto_saldo_apostado_esquina, baraja_carta_reverso_ajustada, boton_regresar, mano_jugador.obtener_imagenes(), mano_banca.obtener_imagenes())
+                    func.pantalla_para_mostrar_cartas(ventana, mesa, texto_saldo_actual_esquina, texto_saldo_apostado_esquina, baraja_carta_reverso_ajustada, boton_regresar, mano_jugador.obtener_imagenes(), mano_banca.obtener_imagenes(), puntos_jugador, puntos_banca)
 
     #Inicio del bucle para capturar eventos, todos los eventos de la pantalla son gestionados dentro de este bucle
     for event in pg.event.get():
