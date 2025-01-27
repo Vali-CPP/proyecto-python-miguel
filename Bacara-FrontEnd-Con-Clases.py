@@ -1,3 +1,4 @@
+from math import e
 import pygame as pg
 import Funciones as func
 from time import sleep
@@ -200,11 +201,28 @@ while game_loop:
                 verificar_congelamiento_barajeo = func.congelamiento_barajeo(tiempo_congelado_aleatorio)
 
             if verificar_congelamiento_barajeo:
+
                 if not verificar_eleccion_jugador:
                     pg.display.flip()
                     func.pantalla_para_elegir_apuesta(ventana, mesa, texto_saldo_actual_esquina, texto_saldo_apostado_esquina, baraja_carta_reverso_ajustada, boton_apuesta_jugador, boton_apuesta_banca, boton_regresar)
-                elif verificar_eleccion_jugador:
-                    func.pantalla_para_mostrar_cartas(ventana, mesa, texto_saldo_actual_esquina, texto_saldo_apostado_esquina, baraja_carta_reverso_ajustada, boton_regresar, mano_jugador.obtener_imagenes(), mano_banca.obtener_imagenes(), puntos_jugador, puntos_banca)
+
+                func.pantalla_para_mostrar_cartas(ventana, mesa, texto_saldo_actual_esquina, texto_saldo_apostado_esquina, baraja_carta_reverso_ajustada, boton_regresar, mano_jugador.obtener_imagenes(), mano_banca.obtener_imagenes(), puntos_jugador, puntos_banca)
+
+                pg.display.flip()
+
+                func.congelamiento_barajeo(tiempo_congelado_aleatorio)
+
+                if mano_jugador.obtener_puntuacion() > mano_banca.obtener_puntuacion():
+                    if apuesta_eleccion_jugador == 1:
+                        func.pantalla_para_victoria(ventana, mesa)
+                    func.pantalla_para_mostrar_derrota(ventana, mesa)
+
+                else:
+                    if apuesta_eleccion_jugador == 2:
+                        func.pantalla_para_victoria(ventana, mesa)
+                    func.pantalla_para_mostrar_derrota(ventana, mesa)
+
+
 
     #Inicio del bucle para capturar eventos, todos los eventos de la pantalla son gestionados dentro de este bucle
     for event in pg.event.get():
