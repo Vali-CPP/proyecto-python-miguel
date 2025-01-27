@@ -14,6 +14,8 @@ verde = (80, 135, 80)
 negro = (0, 0, 0)
 gris = (100, 100, 100)
 
+#Funciones miscelanias
+
 def mazo_de_barajeo(ventana, baraja_carta_reverso_ajustada):
     pila_de_cartas = [(baraja_carta_reverso_ajustada, (585, 95)), (baraja_carta_reverso_ajustada, (595, 105)), (baraja_carta_reverso_ajustada, (605, 115)), (baraja_carta_reverso_ajustada, (615, 125))]
     ventana.blits(pila_de_cartas)
@@ -39,6 +41,8 @@ def renderizar_texto_perdedor_mesa(ventana, fuente, lastima_texto_pos_x=500, las
 def renderizar_texto_empate_mesa(ventana, fuente, empate_texto_pos_x=490, empate_texto_pos_y=120):
     empate_texto = fuente.render("¡Empate!", 50, blanco)
     ventana.blit(empate_texto,(empate_texto_pos_x, empate_texto_pos_y))
+
+#Pantallas
 
 def  pantalla_menu(ventana, imagen_menu, boton_comenzar, boton_salir):
     ventana.blit(imagen_menu, (0 ,0))
@@ -98,12 +102,14 @@ def pantalla_para_elegir_apuesta(ventana, imagen_mesa, texto_saldo_actual_esquin
     ventana.blits(blit_sequence_texto)
     renderizar_texto_jugador_mesa(ventana, fuente_grande, 155, 465, 975, 465)
 
-def pantalla_para_mostrar_cartas(ventana, imagen_mesa, texto_saldo_actual_esquina, texto_saldo_apostado_esquina, baraja_carta_reverso_ajustada, boton_regresar):
+def pantalla_para_mostrar_cartas(ventana, imagen_mesa, texto_saldo_actual_esquina, texto_saldo_apostado_esquina, baraja_carta_reverso_ajustada, boton_regresar, mano_imagenes_jugador, mano_imagenes_banca):
     ventana.blit(imagen_mesa, [0, 0])
     mazo_de_barajeo(ventana, baraja_carta_reverso_ajustada)
     pygame.draw.line(ventana,blanco, [640,311], [640,700], 10)
     blit_sequence_boton =  [(boton_regresar.mensaje, (boton_regresar.boton.x+(boton_regresar.boton.width - boton_regresar.mensaje.get_width())/2, boton_regresar.boton.y+(boton_regresar.boton.height - boton_regresar.mensaje.get_height())/2)), (texto_saldo_actual_esquina.mensaje, (texto_saldo_actual_esquina.boton.x+(texto_saldo_actual_esquina.boton.width - texto_saldo_actual_esquina.mensaje.get_width())/2, texto_saldo_actual_esquina.boton.y+(texto_saldo_actual_esquina.boton.height - texto_saldo_actual_esquina.mensaje.get_height())/2)), (texto_saldo_apostado_esquina.mensaje, (texto_saldo_apostado_esquina.boton.x+(texto_saldo_apostado_esquina.boton.width - texto_saldo_apostado_esquina.mensaje.get_width())/2, texto_saldo_apostado_esquina.boton.y+(texto_saldo_apostado_esquina.boton.height - texto_saldo_apostado_esquina.mensaje.get_height())/2))]
     ventana.blits(blit_sequence_boton)
+    bs_imagenes_carta_volteadas = [(mano_imagenes_jugador[0], (120, 105)), (mano_imagenes_jugador[1], (250, 105)), (mano_imagenes_jugador[2], (380, 105)), (mano_imagenes_banca[0], (820, 105)), (mano_imagenes_banca[1], (950, 105)), (mano_imagenes_banca[2], (1080, 105))]
+    ventana.blits(bs_imagenes_carta_volteadas)
     puntuacion_jugador_texto = fuente_mediana.render("Puntuacion: ", 50, blanco)
     puntuacion_banca_texto = fuente_mediana.render("Puntuacion: ", 50, blanco)
     textos_puntuacion = [(puntuacion_jugador_texto,(280, 390)), (puntuacion_banca_texto, (830, 390))]

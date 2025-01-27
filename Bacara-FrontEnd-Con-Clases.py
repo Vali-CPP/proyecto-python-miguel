@@ -54,7 +54,7 @@ class Mano:
     def Agregar_carta(self, carta):
         self.cartas.append(carta)
 
-    def calcular_puntuacion(self):
+    def obtener_puntuacion(self):
         self.puntuacion = int()
         for i in self.cartas:
             self.puntuacion += i.valor_numerico
@@ -77,7 +77,6 @@ baraja_carta_reverso_crudo = pg.image.load("Recursos/reverso_baraja_1.jpg").conv
 baraja_carta_reverso_ajustada = pg.transform.scale(baraja_carta_reverso_crudo, (100, 150))
 menu = pg.image.load("Recursos/Menu.jpg").convert()
 imagen_carta_as = pg.image.load("Recursos/Cartas_a_utilizar/Acrz.PNG").convert()
-imangen_carta_as = pg.transform.scale(imagen_carta_as, (100, 150))
 imagen_carta_2 = pg.image.load("Recursos/Cartas_a_utilizar/2crz.PNG").convert()
 imagen_carta_3 = pg.image.load("Recursos/Cartas_a_utilizar/3crz.PNG").convert()
 imagen_carta_4 = pg.image.load("Recursos/Cartas_a_utilizar/4crz.PNG").convert()
@@ -90,6 +89,20 @@ imagen_carta_10 = pg.image.load("Recursos/Cartas_a_utilizar/10pcz.PNG").convert(
 imagen_carta_J = pg.image.load("Recursos/Cartas_a_utilizar/Jtrb.PNG").convert()
 imagen_carta_Q = pg.image.load("Recursos/Cartas_a_utilizar/Qtrb.PNG").convert()
 imagen_carta_K = pg.image.load("Recursos/Cartas_a_utilizar/Ktrb.PNG").convert()
+imagen_carta_as = pg.transform.scale(imagen_carta_as, (100, 150))
+imagen_carta_2 = pg.transform.scale(imagen_carta_2, (100, 150))
+imagen_carta_3 = pg.transform.scale(imagen_carta_3, (100, 150))
+imagen_carta_4 = pg.transform.scale(imagen_carta_4, (100, 150))
+imagen_carta_5 = pg.transform.scale(imagen_carta_5, (100, 150))
+imagen_carta_6 = pg.transform.scale(imagen_carta_6, (100, 150))
+imagen_carta_7 = pg.transform.scale(imagen_carta_7, (100, 150))
+imagen_carta_8 = pg.transform.scale(imagen_carta_8, (100, 150))
+imagen_carta_9 = pg.transform.scale(imagen_carta_9, (100, 150))
+imagen_carta_10 = pg.transform.scale(imagen_carta_10, (100, 150))
+imagen_carta_J = pg.transform.scale(imagen_carta_J, (100, 150))
+imagen_carta_Q = pg.transform.scale(imagen_carta_Q, (100, 150))
+imagen_carta_K = pg.transform.scale(imagen_carta_K, (100, 150))
+
 
 #Variables varias
 fuente_pequeña = pg.font.Font(None, 35)
@@ -188,8 +201,7 @@ while game_loop:
                     pg.display.flip()
                     func.pantalla_para_elegir_apuesta(ventana, mesa, texto_saldo_actual_esquina, texto_saldo_apostado_esquina, baraja_carta_reverso_ajustada, boton_apuesta_jugador, boton_apuesta_banca, boton_regresar)
                 elif verificar_eleccion_jugador:
-                    #Aqui va la siguiente pantalla
-                    func.pantalla_para_mostrar_cartas(ventana, mesa, texto_saldo_actual_esquina, texto_saldo_apostado_esquina, baraja_carta_reverso_ajustada, boton_regresar)
+                    func.pantalla_para_mostrar_cartas(ventana, mesa, texto_saldo_actual_esquina, texto_saldo_apostado_esquina, baraja_carta_reverso_ajustada, boton_regresar, mano_jugador.obtener_imagenes(), mano_banca.obtener_imagenes())
 
     #Inicio del bucle para capturar eventos, todos los eventos de la pantalla son gestionados dentro de este bucle
     for event in pg.event.get():
