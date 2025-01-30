@@ -150,6 +150,13 @@ def pantalla_para_mostrar_empate(ventana, imagen_mesa):
     ventana.blit(texto_mensaje_empate, (430, 460))
     renderizar_texto_empate_mesa(ventana, fuente_mas_grande)
 
+def pantalla_para_monto_invalido(ventana, imagen_mesa, baraja_carta_reverso_ajustada, boton_regresar):
+    ventana.blit(imagen_mesa, [0, 0])
+    mazo_de_barajeo(ventana, baraja_carta_reverso_ajustada)
+    blit_sequece = [(boton_regresar.mensaje, (boton_regresar.boton.x+(boton_regresar.boton.width - boton_regresar.mensaje.get_width())/2, boton_regresar.boton.y+(boton_regresar.boton.height - boton_regresar.mensaje.get_height())/2))]
+    ventana.blits(blit_sequece)
+    texto_invalido = fuente_grande.render("SALDO INSUFICIENTE", 50, blanco)
+    ventana.blit(texto_invalido, (400, 490))
 
 def congelamiento_barajeo(tiempo_de_congelamiento):
     sleep(tiempo_de_congelamiento)

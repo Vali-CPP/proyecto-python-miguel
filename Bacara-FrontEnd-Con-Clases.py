@@ -113,7 +113,7 @@ fuente_pequeña = pg.font.Font(None, 35)
 fuente_grande = pg.font.Font(None, 75)
 juego_iniciado = False
 estado_de_boton_ingresar = False
-texto_ingresado = ""
+texto_ingresado = str() 
 boton_ingrese_texto_contador = 0
 saldo_del_jugador = 1000
 saldo_del_jugador_texto = "Saldo: $" + str(saldo_del_jugador)
@@ -201,11 +201,7 @@ while game_loop:
         elif boton_ingrese_texto_contador == apuesta_en_proceso:
             func.pantalla_para_ingresar_apuesta(ventana, mesa, texto_saldo_actual_grande, baraja_carta_reverso_ajustada, boton_regresar, boton_ingrese_texto_inactivo, boton_ingrese_texto_activo, texto_ingresado_renderizado, desplazamiento_lateral_del_texto, fuente_pequeña , 1)
 
-        if boton_ingrese_texto_contador == apuesta_invalida:
-            #Aqui va la pantalla de apuesta invalida.
-            print("Tas pelando bolas")
-
-        if boton_ingrese_texto_contador == apuesta_ingresada:
+        elif boton_ingrese_texto_contador == apuesta_ingresada:
             if not verificar_congelamiento_barajeo:
                 func.pantalla_para_barajeo(ventana, mesa, texto_saldo_actual_esquina, texto_saldo_apostado_esquina, baraja_carta_reverso_ajustada, boton_regresar)
 
@@ -234,6 +230,8 @@ while game_loop:
                         boton_ingrese_texto_contador = 0
                         saldo_del_jugador += round((saldo_apostado * 1.5), 0)
                         texto_saldo_actual_grande.actualizar_mensaje(fuente_grande, "$" + str(saldo_del_jugador))
+                        saldo_apostado_texto = "Saldo Apostado: $" + str(saldo_apostado)
+                        texto_saldo_apostado_esquina.actualizar_mensaje(fuente_pequeña, saldo_apostado_texto)
                         saldo_apostado = 0
                         texto_ingresado = ""
                         verificar_congelamiento_barajeo = False
@@ -251,6 +249,8 @@ while game_loop:
                         verificar_congelamiento_barajeo = False
                         apuesta_eleccion_jugador = 0
                         verificar_eleccion_jugador = False
+                        saldo_apostado_texto = "Saldo Apostado: $" + str(saldo_apostado)
+                        texto_saldo_apostado_esquina.actualizar_mensaje(fuente_pequeña, saldo_apostado_texto)
                         func.limpiar_y_barajear_mano(manos, baraja)
                     elif mano_jugador.obtener_puntuacion() == mano_banca.obtener_puntuacion():
                         pg.display.flip()
@@ -259,6 +259,8 @@ while game_loop:
                         sleep(4)
                         boton_ingrese_texto_contador = 0
                         saldo_del_jugador += saldo_apostado 
+                        saldo_apostado_texto = "Saldo Apostado: $" + str(saldo_apostado)
+                        texto_saldo_apostado_esquina.actualizar_mensaje(fuente_pequeña, saldo_apostado_texto)
                         texto_saldo_actual_grande.actualizar_mensaje(fuente_grande, "$" + str(saldo_del_jugador))
                         saldo_apostado = 0
                         texto_ingresado = ""
@@ -314,17 +316,24 @@ while game_loop:
             if event.key == pg.K_BACKSPACE:
                 texto_ingresado = texto_ingresado[:-1]
             elif (event.key == pg.K_RETURN or boton_ingrese_texto_contador == apuesta_ingresada):
-                if int(texto_ingresado) < saldo_del_jugador and int(texto_ingresado) <= 0:
-                    boton_ingrese_texto_contador = apuesta_invalida
-                saldo_del_jugador -= int(texto_ingresado)
-                saldo_apostado += int(texto_ingresado)
-                saldo_del_jugador_texto = "Saldo: $" + str(saldo_del_jugador)
-                saldo_del_jugador_texto_grande = "$" + str(saldo_del_jugador)
-                saldo_apostado_texto = "Saldo Apostado: $" + str(saldo_apostado)
-                texto_saldo_actual_esquina.actualizar_mensaje(fuente_pequeña, saldo_del_jugador_texto)
-                texto_saldo_apostado_esquina.actualizar_mensaje(fuente_pequeña, saldo_apostado_texto)
-                texto_saldo_actual_grande.actualizar_mensaje(fuente_grande, saldo_del_jugador_texto_grande)
-                boton_ingrese_texto_contador += 1
+                if texto_ingresado != "":
+                    if int(texto_ingresado) > saldo_del_jugador or int(texto_ingresado) <= 0:
+                        func.pantalla_para_monto_invalido(ventana, mesa, baraja_carta_reverso_ajustada, boton_regresar)
+                        pg.display.flip()
+                        sleep(2)
+                        boton_ingrese_texto_contador = apuesta_no_ingresada
+                        texto_ingresado = ""
+                    else:
+                        saldo_apostado += int(texto_ingresado)
+                        saldo_del_jugador -= int(texto_ingresado)
+                        saldo_del_jugador_texto = "Saldo: $" + str(saldo_del_jugador)
+                        saldo_del_jugador_texto_grande = "$" + str(saldo_del_jugador)
+                        saldo_apostado_texto = "Saldo Apostado: $" + str(saldo_apostado)
+                        texto_saldo_actual_esquina.actualizar_mensaje(fuente_pequeña, saldo_del_jugador_texto)
+                        texto_saldo_apostado_esquina.actualizar_mensaje(fuente_pequeña, saldo_apostado_texto)
+                        texto_saldo_actual_grande.actualizar_mensaje(fuente_grande, saldo_del_jugador_texto_grande)
+                        boton_ingrese_texto_contador += 1
+
             else:
                 texto_ingresado += event.unicode
 
