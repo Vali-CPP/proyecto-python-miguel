@@ -169,9 +169,9 @@ boton_apuesta_banca = Boton(fuente_pequeña, 645, 463, 237, 232, "Click", blanco
 
 
 #Esto no es un boton, solamente se utiliza para mostrar el saldo actual y se usa la clase boton por conveniencia
-texto_saldo_actual_esquina = Boton(fuente_pequeña, 40, 5, 150, 50, str(saldo_del_jugador_texto), blanco)
-texto_saldo_actual_grande = Boton(fuente_grande, 560, 585, 150, 50, str(saldo_del_jugador_texto_grande), blanco)
-texto_saldo_apostado_esquina = Boton(fuente_pequeña, 260, 5, 150, 50, str(saldo_apostado_texto), blanco)
+texto_saldo_actual_esquina = Boton(fuente_pequeña, 40, 5, 150, 50, saldo_del_jugador_texto, blanco)
+texto_saldo_actual_grande = Boton(fuente_grande, 560, 585, 150, 50, saldo_del_jugador_texto_grande, blanco)
+texto_saldo_apostado_esquina = Boton(fuente_pequeña, 260, 5, 150, 50, saldo_apostado_texto, blanco)
 
 #Creando la superficie sin dibujar de los botones
 boton_comenzar.Crear_superficie()
@@ -224,7 +224,7 @@ while game_loop:
                     
                     if (mano_jugador.obtener_puntuacion() > mano_banca.obtener_puntuacion() and apuesta_eleccion_jugador == 1) or (mano_jugador.obtener_puntuacion() < mano_banca.obtener_puntuacion() and apuesta_eleccion_jugador == 2): 
                         pg.display.flip()
-                        func.pantalla_para_victoria(ventana, mesa)
+                        func.pantalla_para_victoria(ventana, mesa, saldo_apostado, saldo_apostado)
                         pg.display.flip()
                         sleep(5)
                         boton_ingrese_texto_contador = 0
@@ -238,9 +238,9 @@ while game_loop:
                         apuesta_eleccion_jugador = 0
                         verificar_eleccion_jugador = False
                         func.limpiar_y_barajear_mano(manos, baraja)
-                    elif (mano_jugador.obtener_puntuacion() > mano_banca.obtener_puntuacion() and apuesta_eleccion_jugador == 2) or (mano_jugador.obtener_puntuacion() < mano_banca.obtener_puntuacion() and apuesta_eleccion_jugador == 1):
+                    elif ( 9 > 0 and apuesta_eleccion_jugador == 2) or (mano_jugador.obtener_puntuacion() < mano_banca.obtener_puntuacion() and apuesta_eleccion_jugador == 1):
                         pg.display.flip()
-                        func.pantalla_para_mostrar_derrota(ventana, mesa)
+                        func.pantalla_para_mostrar_derrota(ventana, mesa, saldo_apostado)
                         pg.display.flip()
                         sleep(3)
                         boton_ingrese_texto_contador = 0
@@ -259,10 +259,11 @@ while game_loop:
                         sleep(4)
                         boton_ingrese_texto_contador = 0
                         saldo_del_jugador += saldo_apostado 
-                        saldo_apostado_texto = "Saldo Apostado: $" + str(saldo_apostado)
-                        texto_saldo_apostado_esquina.actualizar_mensaje(fuente_pequeña, saldo_apostado_texto)
-                        texto_saldo_actual_grande.actualizar_mensaje(fuente_grande, "$" + str(saldo_del_jugador))
                         saldo_apostado = 0
+                        saldo_apostado_texto = "Saldo Apostado: $" + str(saldo_apostado)
+                        texto_saldo_actual_grande.actualizar_mensaje(fuente_grande, "$" + str(saldo_del_jugador))
+                        texto_saldo_apostado_esquina.actualizar_mensaje(fuente_pequeña, saldo_apostado_texto)
+                        texto_saldo_actual_esquina.actualizar_mensaje(fuente_pequeña, "Saldo: $" + str(saldo_del_jugador))
                         texto_ingresado = ""
                         verificar_congelamiento_barajeo = False
                         apuesta_eleccion_jugador = 0
@@ -347,8 +348,8 @@ while game_loop:
     else:
         desplazamiento_lateral_del_texto = 0
 
-    #mouse_pos = pg.mouse.get_pos()
-    #print(mouse_pos)
+    mouse_pos = pg.mouse.get_pos()
+    print(mouse_pos)
 
     pg.display.flip()
 
