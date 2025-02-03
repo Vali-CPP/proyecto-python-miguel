@@ -134,27 +134,26 @@ carta_contenido = [["A", 1, imagen_carta_as], ["2", 2, imagen_carta_2], ["3", 3,
 mano_jugador = Mano() 
 mano_banca = Mano()
 manos = [mano_jugador, mano_banca]
-movimiento = True
 run = True
 posY = 105
 posinicial = 615
-posfinal = 120
-movimiento2 = True
 posinicial2 = 615
-posfinal2 = 250
-movimiento3 = True
 posinicial3 = 615
-posfinal3 = 380
-velocidad = 6
 posinicial4 = 615
-posfinal4 = 820
-movimiento4 = True
 posinicial5 = 615
-posfinal5 =950
-movimiento5 = True
 posinicial6 = 615
-posfinal6 = 1080
+movimiento = True
+movimiento2 = True
+movimiento3 = True
+movimiento4 = True
+movimiento5 = True
 movimiento6 = True
+posfinal = 120
+posfinal2 = 250
+posfinal3 = 380
+posfinal4 = 820
+posfinal5 = 950
+posfinal6 = 1080
 velocidad = 6
 reloj = pg.time.Clock()
 
@@ -241,12 +240,12 @@ while game_loop:
                 if not verificar_eleccion_jugador:
                     pg.display.flip()
                     func.pantalla_para_elegir_apuesta(ventana, mesa, texto_saldo_actual_esquina, texto_saldo_apostado_esquina, baraja_carta_reverso_ajustada, boton_apuesta_jugador, boton_apuesta_banca, boton_regresar)
-                    posinicial,posY,movimiento=func.animacione_repartirizq(ventana,baraja_carta_reverso_ajustada,posinicial,posfinal,posY,movimiento,velocidad)
-                    posinicial4,posY,movimiento4=func.animacione_repartirder(ventana,baraja_carta_reverso_ajustada,posinicial4,posfinal4,posY,movimiento4,velocidad)
-                    posinicial2,posY,movimiento2=func.animacione_repartirizq(ventana,baraja_carta_reverso_ajustada,posinicial2,posfinal2,posY,movimiento2,velocidad)
-                    posinicial5,posY,movimiento5=func.animacione_repartirder(ventana,baraja_carta_reverso_ajustada,posinicial5,posfinal5,posY,movimiento5,velocidad)
-                    posinicial3,posY,movimiento3=func.animacione_repartirizq(ventana,baraja_carta_reverso_ajustada,posinicial3,posfinal3,posY,movimiento3,velocidad) 
-                    posinicial6,posY,movimiento6=func.animacione_repartirder(ventana,baraja_carta_reverso_ajustada,posinicial6,posfinal6,posY,movimiento6,velocidad)   
+                    posinicial, posY, movimiento=func.animacione_repartirizq(ventana,baraja_carta_reverso_ajustada,posinicial,posfinal,posY,movimiento,velocidad)
+                    posinicial4, posY, movimiento4=func.animacione_repartirder(ventana,baraja_carta_reverso_ajustada,posinicial4,posfinal4,posY,movimiento4,velocidad)
+                    posinicial2, posY, movimiento2=func.animacione_repartirizq(ventana,baraja_carta_reverso_ajustada,posinicial2,posfinal2,posY,movimiento2,velocidad)
+                    posinicial5, posY, movimiento5=func.animacione_repartirder(ventana,baraja_carta_reverso_ajustada,posinicial5,posfinal5,posY,movimiento5,velocidad)
+                    posinicial3, posY, movimiento3=func.animacione_repartirizq(ventana,baraja_carta_reverso_ajustada,posinicial3,posfinal3,posY,movimiento3,velocidad) 
+                    posinicial6, posY, movimiento6=func.animacione_repartirder(ventana,baraja_carta_reverso_ajustada,posinicial6,posfinal6,posY,movimiento6,velocidad)   
 
                 else:
                     func.pantalla_para_mostrar_cartas(ventana, mesa, texto_saldo_actual_esquina, texto_saldo_apostado_esquina, baraja_carta_reverso_ajustada, boton_regresar, mano_jugador.obtener_imagenes(), mano_banca.obtener_imagenes(), mano_jugador.obtener_puntuacion(), mano_banca.obtener_puntuacion())
@@ -271,6 +270,18 @@ while game_loop:
                         verificar_congelamiento_barajeo = False
                         apuesta_eleccion_jugador = 0
                         verificar_eleccion_jugador = False
+                        posinicial = 615
+                        posinicial2 = 615
+                        posinicial3 = 615
+                        posinicial4 = 615
+                        posinicial5 = 615
+                        posinicial6 = 615
+                        movimiento = True
+                        movimiento2 = True
+                        movimiento3 = True
+                        movimiento4 = True
+                        movimiento5 = True
+                        movimiento6 = True
                         func.limpiar_y_barajear_mano(manos, baraja)
                     elif ( mano_jugador.obtener_puntuacion() > mano_banca.obtener_puntuacion() and apuesta_eleccion_jugador == 2) or (mano_jugador.obtener_puntuacion() < mano_banca.obtener_puntuacion() and apuesta_eleccion_jugador == 1):
                         pg.display.flip()
@@ -287,6 +298,18 @@ while game_loop:
                         verificar_eleccion_jugador = False
                         saldo_apostado_texto = "Saldo Apostado: $" + str(saldo_apostado)
                         texto_saldo_apostado_esquina.actualizar_mensaje(fuente_pequeña, saldo_apostado_texto)
+                        posinicial = 615
+                        posinicial2 = 615
+                        posinicial3 = 615
+                        posinicial4 = 615
+                        posinicial5 = 615
+                        posinicial6 = 615
+                        movimiento = True
+                        movimiento2 = True
+                        movimiento3 = True
+                        movimiento4 = True
+                        movimiento5 = True
+                        movimiento6 = True
                         func.limpiar_y_barajear_mano(manos, baraja)
                     elif mano_jugador.obtener_puntuacion() == mano_banca.obtener_puntuacion():
                         pg.display.flip()
@@ -304,6 +327,18 @@ while game_loop:
                         verificar_congelamiento_barajeo = False
                         apuesta_eleccion_jugador = 0
                         verificar_eleccion_jugador = False
+                        posinicial = 615
+                        posinicial2 = 615
+                        posinicial3 = 615
+                        posinicial4 = 615
+                        posinicial5 = 615
+                        posinicial6 = 615
+                        movimiento = True
+                        movimiento2 = True
+                        movimiento3 = True
+                        movimiento4 = True
+                        movimiento5 = True
+                        movimiento6 = True
                         func.limpiar_y_barajear_mano(manos, baraja)
                     else:
                         pg.mixer.unpause()
