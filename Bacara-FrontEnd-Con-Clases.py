@@ -1,10 +1,10 @@
-from math import e
 import pygame as pg
 import Funciones as func
 from time import sleep
 from random import randint
 
 pg.init()
+pg.mixer.init()
 class Boton:
     def __init__(self, fuente, posicion_x, posicion_y, tamaño_x, tamaño_y, mensaje_texto, mensaje_color):
         self.posicion_x = posicion_x
@@ -185,12 +185,17 @@ texto_saldo_actual_esquina.Crear_superficie()
 texto_saldo_apostado_esquina.Crear_superficie()
 texto_saldo_actual_grande.Crear_superficie()
 
+#Sonido del juego
+pg.mixer.music.load("Recursos/Soundtrack-general.opus")
+pg.mixer.music.play(-1)
+pg.mixer.music.set_volume(0.1)
+sonido_de_derrota = pg.mixer.Sound("Recursos/Soundtrack-perdiste.opus")
+sonido_de_victoria = pg.mixer.Sound("Recursos/Soundtrack-ganaste.opus")
 
-#Pre-Game loop
 
 #Game Loop
 while game_loop:
-
+    
     if not juego_iniciado:
         func.pantalla_menu(ventana, menu, boton_comenzar, boton_salir)
 
@@ -217,14 +222,15 @@ while game_loop:
 
                 else:
                     func.pantalla_para_mostrar_cartas(ventana, mesa, texto_saldo_actual_esquina, texto_saldo_apostado_esquina, baraja_carta_reverso_ajustada, boton_regresar, mano_jugador.obtener_imagenes(), mano_banca.obtener_imagenes(), mano_jugador.obtener_puntuacion(), mano_banca.obtener_puntuacion())
-    
+
                     pg.display.flip()
     
                     sleep(3)
                     
                     if (mano_jugador.obtener_puntuacion() > mano_banca.obtener_puntuacion() and apuesta_eleccion_jugador == 1) or (mano_jugador.obtener_puntuacion() < mano_banca.obtener_puntuacion() and apuesta_eleccion_jugador == 2): 
                         pg.display.flip()
-                        func.pantalla_para_victoria(ventana, mesa, saldo_apostado, saldo_apostado)
+                        func.pantalla_para_victoria(ventana, mesa, saldo_apostado, saldo_apostado, apuesta_eleccion_jugador, mano_jugador.obtener_imagenes(), mano_banca.obtener_imagenes())
+                        sonido_de_victoria.play()
                         pg.display.flip()
                         sleep(5)
                         boton_ingrese_texto_contador = 0
@@ -238,9 +244,11 @@ while game_loop:
                         apuesta_eleccion_jugador = 0
                         verificar_eleccion_jugador = False
                         func.limpiar_y_barajear_mano(manos, baraja)
-                    elif ( 9 > 0 and apuesta_eleccion_jugador == 2) or (mano_jugador.obtener_puntuacion() < mano_banca.obtener_puntuacion() and apuesta_eleccion_jugador == 1):
+                    elif ( mano_jugador.obtener_puntuacion() > mano_banca.obtener_puntuacion() and apuesta_eleccion_jugador == 2) or (mano_jugador.obtener_puntuacion() < mano_banca.obtener_puntuacion() and apuesta_eleccion_jugador == 1):
                         pg.display.flip()
-                        func.pantalla_para_mostrar_derrota(ventana, mesa, saldo_apostado)
+                        func.pantalla_para_mostrar_derrota(ventana, mesa, saldo_apostado, apuesta_eleccion_jugador, mano_jugador.obtener_imagenes(), mano_banca.obtener_imagenes())
+                        sonido_de_derrota.play()
+                        pg.mixer.Sound.set_volume(sonido_de_derrota, 1.0)
                         pg.display.flip()
                         sleep(3)
                         boton_ingrese_texto_contador = 0
@@ -269,6 +277,8 @@ while game_loop:
                         apuesta_eleccion_jugador = 0
                         verificar_eleccion_jugador = False
                         func.limpiar_y_barajear_mano(manos, baraja)
+                    else:
+                        pg.mixer.unpause()
 
 
     #Inicio del bucle para capturar eventos, todos los eventos de la pantalla son gestionados dentro de este bucle
@@ -348,8 +358,8 @@ while game_loop:
     else:
         desplazamiento_lateral_del_texto = 0
 
-    mouse_pos = pg.mouse.get_pos()
-    print(mouse_pos)
+    #mouse_pos = pg.mouse.get_pos()
+    #print(mouse_pos)
 
     pg.display.flip()
 

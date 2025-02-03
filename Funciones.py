@@ -126,20 +126,30 @@ def pantalla_para_mostrar_cartas(ventana, imagen_mesa, texto_saldo_actual_esquin
     ventana.blits(textos_y_numeros_puntuacion)
     renderizar_texto_jugador_mesa(ventana, fuente_grande, 280, 330, 850, 330)
 
-def pantalla_para_victoria(ventana, imagen_mesa, texto_saldo_apostado_numeros, texto_saldo_ganado_numeros, mano_imagenes=None):
+def pantalla_para_victoria(ventana, imagen_mesa, texto_saldo_apostado_numeros, texto_saldo_ganado_numeros, eleccion_del_jugador, mano_imagenes_jugador, mano_imagenes_banca):
     ventana.blit(imagen_mesa, [0, 0])
-    #mano_imagenes_reescalada = list(pg.transform.scale(mano_imagenes[0], (70,100)))
     texto_saldo_ganado = fuente_pequeña.render("Saldo Ganado", 50, blanco)
     texto_saldo_apostado = fuente_pequeña.render("Saldo Apostado", 50, blanco)
     texto_mano_ganadora = fuente_mediana.render("Mano Ganadora", 50, blanco)
     texto_saldo_apostado_numeros = fuente_grande.render("$ " + str(texto_saldo_apostado_numeros), 50, blanco)
-    texto_saldo_ganado_numeros = fuente_grande.render("$ " + str(texto_saldo_ganado_numeros * 1.5), 50, blanco)
-    blit_sequence_texto = [(texto_saldo_ganado, (150, 360)), (texto_saldo_ganado_numeros, (180, 410)), (texto_saldo_apostado, (430, 360)), (texto_saldo_apostado_numeros, (460, 410)), (texto_mano_ganadora, (865, 360))]
+    texto_saldo_ganado_numeros = fuente_grande.render("$ " + str(texto_saldo_ganado_numeros * 0.5), 50, blanco)
+    blit_sequence_texto = [(texto_saldo_ganado, (150, 360)), (texto_saldo_ganado_numeros, (180, 410)), (texto_saldo_apostado, (430, 360)), (texto_saldo_apostado_numeros, (460, 410)), (texto_mano_ganadora, (765, 360))]
     ventana.blits(blit_sequence_texto)
-    #bs_imagenes_mano = [(mano_imagenes_reescalada[0], )]
     renderizar_texto_ganador_mesa(ventana, fuente_mas_grande)
 
-def pantalla_para_mostrar_derrota(ventana, imagen_mesa, texto_saldo_perdido_numeros):
+    if eleccion_del_jugador == 1:
+        imagenes_reescaladas = [pygame.transform.scale(mano_imagenes_jugador[0], (100, 140)), pygame.transform.scale(mano_imagenes_jugador[1], (100, 140)), pygame.transform.scale(mano_imagenes_jugador[2], (100, 140))]
+        bs_imagenes_cartas = [(imagenes_reescaladas[0], (720, 410)), (imagenes_reescaladas[1], (835, 410)), (imagenes_reescaladas[2], (950, 410))]
+        ventana.blits(bs_imagenes_cartas)
+    else:
+        imagenes_reescaladas = [pygame.transform.scale(mano_imagenes_banca[0], (100, 140)), pygame.transform.scale(mano_imagenes_banca[1], (100, 140)), pygame.transform.scale(mano_imagenes_banca[2], (100, 140))]
+        bs_imagenes_cartas = [(imagenes_reescaladas[0], (720, 410)), (imagenes_reescaladas[1], (835, 410)), (imagenes_reescaladas[2], (950, 410))]
+        ventana.blits(bs_imagenes_cartas)
+
+
+
+
+def pantalla_para_mostrar_derrota(ventana, imagen_mesa, texto_saldo_perdido_numeros, eleccion_del_jugador, mano_imagenes_jugador, mano_imagenes_banca):
     ventana.blit(imagen_mesa, [0, 0])
     texto_saldo_perdido = fuente_mediana.render("Saldo Perdido", 50, blanco)
     texto_mano_perdedora = fuente_mediana.render("Mano Perdedora", 50, blanco)
@@ -147,6 +157,15 @@ def pantalla_para_mostrar_derrota(ventana, imagen_mesa, texto_saldo_perdido_nume
     blit_sequence_texto = [(texto_saldo_perdido, (360, 360)), (texto_saldo_perdido_numeros, (400, 410)), (texto_mano_perdedora, (765, 360))]
     ventana.blits(blit_sequence_texto)
     renderizar_texto_perdedor_mesa(ventana, fuente_mas_grande)
+
+    if eleccion_del_jugador == 1:
+        imagenes_reescaladas = [pygame.transform.scale(mano_imagenes_jugador[0], (100, 140)), pygame.transform.scale(mano_imagenes_jugador[1], (100, 140)), pygame.transform.scale(mano_imagenes_jugador[2], (100, 140))]
+        bs_imagenes_cartas = [(imagenes_reescaladas[0], (720, 410)), (imagenes_reescaladas[1], (835, 410)), (imagenes_reescaladas[2], (950, 410))]
+        ventana.blits(bs_imagenes_cartas)
+    else:
+        imagenes_reescaladas = [pygame.transform.scale(mano_imagenes_banca[0], (100, 140)), pygame.transform.scale(mano_imagenes_banca[1], (100, 140)), pygame.transform.scale(mano_imagenes_banca[2], (100, 140))]
+        bs_imagenes_cartas = [(imagenes_reescaladas[0], (720, 410)), (imagenes_reescaladas[1], (835, 410)), (imagenes_reescaladas[2], (950, 410))]
+        ventana.blits(bs_imagenes_cartas)
 
 def pantalla_para_mostrar_empate(ventana, imagen_mesa):
     ventana.blit(imagen_mesa, [0, 0])
@@ -159,8 +178,8 @@ def pantalla_para_monto_invalido(ventana, imagen_mesa, baraja_carta_reverso_ajus
     mazo_de_barajeo(ventana, baraja_carta_reverso_ajustada)
     blit_sequece = [(boton_regresar.mensaje, (boton_regresar.boton.x+(boton_regresar.boton.width - boton_regresar.mensaje.get_width())/2, boton_regresar.boton.y+(boton_regresar.boton.height - boton_regresar.mensaje.get_height())/2))]
     ventana.blits(blit_sequece)
-    texto_invalido = fuente_grande.render("SALDO INSUFICIENTE", 50, blanco)
-    ventana.blit(texto_invalido, (400, 490))
+    texto_invalido = fuente_grande.render("MONTO INVALIDO", 50, blanco)
+    ventana.blit(texto_invalido, (460, 490))
 
 def congelamiento_barajeo(tiempo_de_congelamiento):
     sleep(tiempo_de_congelamiento)
