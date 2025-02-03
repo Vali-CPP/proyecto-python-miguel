@@ -97,8 +97,6 @@ def pantalla_para_barajeo(ventana, imagen_mesa, texto_saldo_actual_esquina, text
 def pantalla_para_elegir_apuesta(ventana, imagen_mesa, texto_saldo_actual_esquina, texto_saldo_apostado_esquina, baraja_carta_reverso_ajustada, boton_apuesta_jugador, boton_apuesta_banca, boton_regresar):
     ventana.blit(imagen_mesa, [0, 0])
     mazo_de_barajeo(ventana, baraja_carta_reverso_ajustada)
-    secuencia_de_cartas_barajeadas = [(baraja_carta_reverso_ajustada, (120, 105)), (baraja_carta_reverso_ajustada, (250, 105)), (baraja_carta_reverso_ajustada, (380, 105)), (baraja_carta_reverso_ajustada, (820, 105)), (baraja_carta_reverso_ajustada, (950, 105)), (baraja_carta_reverso_ajustada, (1080, 105))]
-    ventana.blits(secuencia_de_cartas_barajeadas)
     pygame.draw.line(ventana, blanco, [400,311], [400, 700], 10)
     pygame.draw.line(ventana, blanco, [886,311], [886, 700], 10)
     blit_sequence_boton =  [(boton_regresar.mensaje, (boton_regresar.boton.x+(boton_regresar.boton.width - boton_regresar.mensaje.get_width())/2, boton_regresar.boton.y+(boton_regresar.boton.height - boton_regresar.mensaje.get_height())/2)), (texto_saldo_actual_esquina.mensaje, (texto_saldo_actual_esquina.boton.x+(texto_saldo_actual_esquina.boton.width - texto_saldo_actual_esquina.mensaje.get_width())/2, texto_saldo_actual_esquina.boton.y+(texto_saldo_actual_esquina.boton.height - texto_saldo_actual_esquina.mensaje.get_height())/2)), (texto_saldo_apostado_esquina.mensaje, (texto_saldo_apostado_esquina.boton.x+(texto_saldo_apostado_esquina.boton.width - texto_saldo_apostado_esquina.mensaje.get_width())/2, texto_saldo_apostado_esquina.boton.y+(texto_saldo_apostado_esquina.boton.height - texto_saldo_apostado_esquina.mensaje.get_height())/2)), (boton_apuesta_jugador.mensaje, (boton_apuesta_jugador.boton.x+(boton_apuesta_jugador.boton.width - boton_apuesta_jugador.mensaje.get_width())/2, boton_apuesta_jugador.boton.y+(boton_apuesta_jugador.boton.height - boton_apuesta_jugador.mensaje.get_height())/2)), (boton_apuesta_banca.mensaje, (boton_apuesta_banca.boton.x+(boton_apuesta_banca.boton.width - boton_apuesta_banca.mensaje.get_width())/2, boton_apuesta_banca.boton.y+(boton_apuesta_banca.boton.height - boton_apuesta_banca.mensaje.get_height())/2))]
@@ -146,9 +144,6 @@ def pantalla_para_victoria(ventana, imagen_mesa, texto_saldo_apostado_numeros, t
         bs_imagenes_cartas = [(imagenes_reescaladas[0], (720, 410)), (imagenes_reescaladas[1], (835, 410)), (imagenes_reescaladas[2], (950, 410))]
         ventana.blits(bs_imagenes_cartas)
 
-
-
-
 def pantalla_para_mostrar_derrota(ventana, imagen_mesa, texto_saldo_perdido_numeros, eleccion_del_jugador, mano_imagenes_jugador, mano_imagenes_banca):
     ventana.blit(imagen_mesa, [0, 0])
     texto_saldo_perdido = fuente_mediana.render("Saldo Perdido", 50, blanco)
@@ -184,3 +179,23 @@ def pantalla_para_monto_invalido(ventana, imagen_mesa, baraja_carta_reverso_ajus
 def congelamiento_barajeo(tiempo_de_congelamiento):
     sleep(tiempo_de_congelamiento)
     return True
+
+def animacione_repartirizq(ventana, baraja_carta_reverso_ajustada, posinicial, posfinal, posY, movimiento, velocidad):
+    ventana.blit(baraja_carta_reverso_ajustada,(posinicial,posY))
+    if movimiento==True:
+        if posinicial>=posfinal:
+            posinicial-=velocidad
+        else:
+            movimiento=False
+    
+    return posinicial,posY,movimiento
+
+def animacione_repartirder(ventana, baraja_carta_reverso_ajustada, posinicial, posfinal, posY, movimiento, velocidad):
+    ventana.blit(baraja_carta_reverso_ajustada,(posinicial,posY))
+    if movimiento==True:
+        if posinicial<=posfinal:
+            posinicial+=velocidad
+        else:
+            movimiento=False
+    
+    return posinicial,posY,movimiento
