@@ -3,6 +3,7 @@ from time import sleep
 
 pygame.init()
 
+reloj=pygame.time.Clock()
 fuente_pequeña = pygame.font.Font(None, 35)
 fuente_mediana = pygame.font.Font(None, 45)
 fuente_grande = pygame.font.Font(None, 65)
@@ -199,3 +200,39 @@ def animacione_repartirder(ventana, baraja_carta_reverso_ajustada, posinicial, p
             movimiento=False
     
     return posinicial,posY,movimiento
+
+def voltear_cartas(ventana, mesa, posY, posfinal, frente, baraja_carta_reverso_ajustada2,baraja_carta_reverso_ajustada):
+    volteo = True
+    escala = 100
+    reduccion_aumento = True
+    reloj = pygame.time.Clock()
+
+    while volteo:
+        
+        ventana.blit(mesa, (posfinal-1, posY), (posfinal, posY, 130, 170))
+        pila_de_cartas2 = [(baraja_carta_reverso_ajustada2, (585, 95)), (baraja_carta_reverso_ajustada2, (595, 105)), (baraja_carta_reverso_ajustada2, (605, 115)), (baraja_carta_reverso_ajustada2, (615, 125))]
+        ventana.blits(pila_de_cartas2)
+        
+        
+        
+
+        if reduccion_aumento:
+            escala -= 6
+            if escala <= 0:
+                reduccion_aumento = False
+                frente, baraja_carta_reverso_ajustada = baraja_carta_reverso_ajustada, frente
+        else:
+            escala += 6
+            if escala >= 100:
+                escala = 100
+                volteo = False
+        
+        if escala > 0:
+            imagen_frente = pygame.transform.scale(frente, (escala, 150))
+            imagen_frente_ajusatada= imagen_frente.get_rect(center=(posfinal + 100 // 2, posY + 150 // 2))
+            ventana.blit(imagen_frente, imagen_frente_ajusatada)
+        
+        pygame.display.flip()
+        reloj.tick(60)
+    
+    

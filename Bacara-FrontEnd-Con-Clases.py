@@ -75,11 +75,14 @@ class Mano:
 #Creando ventana
 ventana = pg.display.set_mode([1280, 720])
 pg.display.set_caption("Baccarat")
-
+x=100
+y=150
 #Carga de imagenes.
 mesa = pg.image.load("Recursos/Mesa.jpg").convert()
 baraja_carta_reverso_crudo = pg.image.load("Recursos/reverso_baraja_1.jpg").convert()
 baraja_carta_reverso_ajustada = pg.transform.scale(baraja_carta_reverso_crudo, (100, 150))
+baraja_carta_reverso_crudo2=pg.image.load("Recursos/reverso_baraja_2.jpg").convert()
+baraja_carta_reverso_ajustada2 = pg.transform.scale(baraja_carta_reverso_crudo2, (100, 150))
 menu = pg.image.load("Recursos/Menu.jpg").convert()
 imagen_carta_as = pg.image.load("Recursos/Cartas_a_utilizar/Acrz.PNG").convert()
 imagen_carta_2 = pg.image.load("Recursos/Cartas_a_utilizar/2crz.PNG").convert()
@@ -94,21 +97,24 @@ imagen_carta_10 = pg.image.load("Recursos/Cartas_a_utilizar/10pcz.PNG").convert(
 imagen_carta_J = pg.image.load("Recursos/Cartas_a_utilizar/Jtrb.PNG").convert()
 imagen_carta_Q = pg.image.load("Recursos/Cartas_a_utilizar/Qtrb.PNG").convert()
 imagen_carta_K = pg.image.load("Recursos/Cartas_a_utilizar/Ktrb.PNG").convert()
-imagen_carta_as = pg.transform.scale(imagen_carta_as, (100, 150))
-imagen_carta_2 = pg.transform.scale(imagen_carta_2, (100, 150))
-imagen_carta_3 = pg.transform.scale(imagen_carta_3, (100, 150))
-imagen_carta_4 = pg.transform.scale(imagen_carta_4, (100, 150))
-imagen_carta_5 = pg.transform.scale(imagen_carta_5, (100, 150))
-imagen_carta_6 = pg.transform.scale(imagen_carta_6, (100, 150))
-imagen_carta_7 = pg.transform.scale(imagen_carta_7, (100, 150))
-imagen_carta_8 = pg.transform.scale(imagen_carta_8, (100, 150))
-imagen_carta_9 = pg.transform.scale(imagen_carta_9, (100, 150))
-imagen_carta_10 = pg.transform.scale(imagen_carta_10, (100, 150))
-imagen_carta_J = pg.transform.scale(imagen_carta_J, (100, 150))
-imagen_carta_Q = pg.transform.scale(imagen_carta_Q, (100, 150))
-imagen_carta_K = pg.transform.scale(imagen_carta_K, (100, 150))
+imagen_carta_as = pg.transform.scale(imagen_carta_as, (100,150))
+imagen_carta_2 = pg.transform.scale(imagen_carta_2, (100,150))
+imagen_carta_3 = pg.transform.scale(imagen_carta_3, (100,150))
+imagen_carta_4 = pg.transform.scale(imagen_carta_4, (100,150))
+imagen_carta_5 = pg.transform.scale(imagen_carta_5, (100,150))
+imagen_carta_6 = pg.transform.scale(imagen_carta_6, (100,150))
+imagen_carta_7 = pg.transform.scale(imagen_carta_7, (100,150))
+imagen_carta_8 = pg.transform.scale(imagen_carta_8, (100,150))
+imagen_carta_9 = pg.transform.scale(imagen_carta_9, (100,150))
+imagen_carta_10 = pg.transform.scale(imagen_carta_10, (100,150))
+imagen_carta_J = pg.transform.scale(imagen_carta_J, (100,150))
+imagen_carta_Q = pg.transform.scale(imagen_carta_Q, (100,150))
+imagen_carta_K = pg.transform.scale(imagen_carta_K, (100,150))
 
 #Variables varias
+x=100
+y=150
+escala=y
 fuente_pequeña = pg.font.Font(None, 35)
 fuente_grande = pg.font.Font(None, 75)
 juego_iniciado = False
@@ -154,7 +160,7 @@ posfinal3 = 380
 posfinal4 = 820
 posfinal5 = 950
 posfinal6 = 1080
-velocidad = 6
+velocidad = 8
 reloj = pg.time.Clock()
 
 #Creando las cartas, la baraja y las manos de cada jugador
@@ -248,6 +254,16 @@ while game_loop:
                     posinicial6, posY, movimiento6=func.animacione_repartirder(ventana,baraja_carta_reverso_ajustada,posinicial6,posfinal6,posY,movimiento6,velocidad)   
 
                 else:
+
+                    func.voltear_cartas(ventana, mesa,posY,posfinal,baraja_carta_reverso_ajustada2,baraja_carta_reverso_ajustada, mano_jugador.obtener_imagenes()[0])
+                    func.voltear_cartas(ventana, mesa,posY,posfinal4,baraja_carta_reverso_ajustada2,baraja_carta_reverso_ajustada, mano_banca.obtener_imagenes()[0])
+                    func.voltear_cartas(ventana, mesa,posY,posfinal2,baraja_carta_reverso_ajustada2,baraja_carta_reverso_ajustada, mano_jugador.obtener_imagenes()[1])
+                    func.voltear_cartas(ventana, mesa,posY,posfinal5,baraja_carta_reverso_ajustada2,baraja_carta_reverso_ajustada, mano_banca.obtener_imagenes()[1])
+                    func.voltear_cartas(ventana, mesa,posY,posfinal3,baraja_carta_reverso_ajustada2,baraja_carta_reverso_ajustada, mano_jugador.obtener_imagenes()[2])
+                    func.voltear_cartas(ventana, mesa,posY,posfinal6,baraja_carta_reverso_ajustada2,baraja_carta_reverso_ajustada, mano_banca.obtener_imagenes()[2])
+                
+                
+
                     func.pantalla_para_mostrar_cartas(ventana, mesa, texto_saldo_actual_esquina, texto_saldo_apostado_esquina, baraja_carta_reverso_ajustada, boton_regresar, mano_jugador.obtener_imagenes(), mano_banca.obtener_imagenes(), mano_jugador.obtener_puntuacion(), mano_banca.obtener_puntuacion())
 
                     pg.display.flip()
@@ -340,8 +356,7 @@ while game_loop:
                         movimiento5 = True
                         movimiento6 = True
                         func.limpiar_y_barajear_mano(manos, baraja)
-                    else:
-                        pg.mixer.unpause()
+
 
 
     #Inicio del bucle para capturar eventos, todos los eventos de la pantalla son gestionados dentro de este bucle
@@ -423,7 +438,7 @@ while game_loop:
 
     #mouse_pos = pg.mouse.get_pos()
     #print(mouse_pos)
-    reloj.tick(110)
+    reloj.tick(60)
     pg.display.flip()
 
 pg.quit()
